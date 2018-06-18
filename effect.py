@@ -9,17 +9,17 @@ a_int = int(hyperion.args.get('a_int', 5))
 a_bool = bool(hyperion.args.get('a_bool', False))
 
 """ Define some variables """
-sleepTime = 0.2
+sleepTime = 0.02
 
 offset = 17
 blend_percantages = []
 rotation = 0
 """ these should be in the json file so the user can manipulate them """
-rotation_speed = 0.001
-color1_change = 0.0001
-color2_change = 0.00011
-rgb1 = [255, 100, 100]
-rgb2 = [100, 100, 255]
+rotation_speed = 0.01
+color1_change = 0.001
+color2_change = 0.0011
+rgb1 = [255, 0, 0]
+rgb2 = [0, 0, 255]
 
 
 """ Define some functions """
