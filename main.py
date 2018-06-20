@@ -25,7 +25,7 @@ hyperion_port = 19444
 horizontal_led_num = 18
 vertical_led_num = 11
 first_led_offset_num = 0
-leds_in_clockwise_direction = False
+leds_in_clockwise_direction = True
 has_corner_leds = False
 
 
