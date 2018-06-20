@@ -1,17 +1,41 @@
 import hyperion, time, datetime
-
+import math
 
 n=hyperion.ledCount
+u=18
+v=11
 
+a=[]
 
-def bFill(data,n,x,ch):
-	i0=int(x*n)
-	i1=(i0+1)%n
-	t1=(x*n-i0)
-	t0=1-t1
-	print i0
-	data[3*i0+ch]=int(t0*255);
-	data[3*i1+ch]=int(t1*255);
+#
+#  0 x x x
+#  x
+#  x
+#  0 x x x
+def	ledDirs():
+	pos=[]
+	for i in range(hyperion.ledCount):
+		l=i%(u+v)
+		if l < u:
+			x,y=l+1,0
+		else:
+			x,y=u+1,l-u +1
+		
+		if i>= u+v:
+			x,y=1+u-x,1+v-y
+
+		x,y=x,-y
+		x-=(u+1)/2.0
+		y+=(v+1)/2.0
+		phi=math.atan2(x,y)
+		if phi<0:
+			phi+=2*math.pi
+		phi/=2*math.pi
+		#pos+=[[x,y]]
+		pos+=[phi]
+	return pos
+
+pos=ledDirs()
 
 def ringDist(a,b):
 	if a>b:
@@ -19,8 +43,8 @@ def ringDist(a,b):
 	# a<b
 	return min(b-a,a+1-b)
 
-def dist2intensity(v):
-	return int((1-v)**16 * 255)
+def dist2intensity(v,scale):
+	return int(((1-v)**40) *scale* 255)
 
 # effect loop
 while not hyperion.abort():
@@ -28,18 +52,21 @@ while not hyperion.abort():
 
 	c = (now.second + now.microsecond/1e6) / 60.0
 	b = (now.minute + c) / 60.0
-	a = ((now.hour % 12) + 0 ) / 12.0
-	a=0
+	a = ((now.hour % 12) + b ) / 12.0
 	led_data = bytearray()
-	print a
+	#print a
 
 	for i in range(hyperion.ledCount):
-		off=(i/1.0/hyperion.ledCount+0/8.0)%1.0
+
+		#off=(i/1.0/hyperion.ledCount+0/8.0)%1.0
+		off=pos[i]
 		dC = ringDist(off,c)
 		dB = ringDist(off,b)
 		dA = ringDist(off,a)
-		#led_data += bytearray(( dist2intensity(dC),dist2intensity(dB),dist2intensity(dA) ))
-		led_data += bytearray(( dist2intensity(dA),int(0),int(0) ))
+#		print off
+#		print dA
+		led_data += bytearray(( dist2intensity(dC,.3),dist2intensity(dB,.6),dist2intensity(dA,1) ))
+		#led_data += bytearray(( dist2intensity(dC),int(0),int(0) ))
 		#led_data += bytearray(( int((i*now.second)%255),int((i*now.second)%255),int((i*now.second)%255)))
 
 	#bFill(led_data,hyperion.ledCount,c,0)
@@ -48,4 +75,4 @@ while not hyperion.abort():
 
 
 	hyperion.setColor(led_data)
-	time.sleep(0.2)
+	time.sleep(0.1)
