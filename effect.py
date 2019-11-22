@@ -4,6 +4,7 @@ import math
 n=hyperion.ledCount
 u=18
 v=11
+maxIntensity=128
 
 a=[]
 
@@ -44,7 +45,7 @@ def ringDist(a,b):
 	return min(b-a,a+1-b)
 
 def dist2intensity(v,scale):
-	return int(((1-v)**40) *scale* 255)
+	return int(((1-v)**40) *scale* maxIntensity)
 
 # effect loop
 while not hyperion.abort():
